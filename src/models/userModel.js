@@ -15,6 +15,9 @@ let userSchema = new Schema({
         type: String,
         required: true,
     },
+    groupId: { type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Group' 
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);

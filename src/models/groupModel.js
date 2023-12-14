@@ -7,10 +7,9 @@ let groupSchema = new Schema({
         required: true,
         unique: true,
     },
-    user_id: {
-        type: Number,
-        required: true,
-    }
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+
+
 });
 
 module.exports = mongoose.model('mongoose', groupSchema);

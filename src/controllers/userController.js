@@ -1,4 +1,7 @@
 const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+require('dotenv').config()
 
 exports.listAllUsers = async function (req, res) {
     try {
@@ -14,6 +17,9 @@ exports.register = async (req, res) => {
     try {
         const newUser = new User(req.body);
         const user = await newUser.save();
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
         res.status(201).json({ message: `Utilisateur crée: ${user.email}` });
     } catch (error) {
         res.status(400).json({ message: "invalid request" });
@@ -24,18 +30,20 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ email: req.body.email });
+        const validPassword = await bcrypt.compare(password, user.password);
         if (!user) {
             return res.status(404).json({ message: "user not found" });
         }
         if (user.email === req.body.email && user.password === req.body.password) {
-            res.status(201).json({ message: "User connected successfully" });
             const userData = {
                 id: user._id,
                 email: user.email,
                 password: user.password,
                 firstName: user.firstName,
             };
-        } else {
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY, { expiresIn: "10h" });
+            res.status(200).json({ token });
+        } if (!validPassword) {
             res.status(401).json({ message: "password incorrect" });
         }
     } catch (error) {
