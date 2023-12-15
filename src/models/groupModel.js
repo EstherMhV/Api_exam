@@ -13,9 +13,9 @@ let groupSchema = new Schema({
         unique: true,
     },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-
-
-
+    invitations: { type: Array,
+        default: [] 
+    }
 });
 
 module.exports = mongoose.model('mongoose', groupSchema);

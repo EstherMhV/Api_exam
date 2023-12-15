@@ -22,7 +22,7 @@ router
 
 /// Group invitation endpoint
 router
-    .route('/:id_group/invite')
+    .route('/invite')
     .post(groupController.sendInvitation)
 
 

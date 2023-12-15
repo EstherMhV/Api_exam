@@ -15,12 +15,12 @@ let userSchema = new Schema({
         type: String,
         required: true,
     },
-    groupId: { type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Group' 
+    group_id: { type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Group' 
     },
     role: {
         type: String,
-        requires: true,
+        required: true,
         default: 'user',
     }
 });
