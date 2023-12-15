@@ -4,19 +4,6 @@ const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_KEY;
 
 
-
-// async function authenticate(req, res, next) {
-//     const token = req.headers['authorization'];
-
-//     try {
-//         const decoded = jwt.verify(token, 'your-secret-key');
-//         req.user = decoded;
-//         next();
-//     } catch (error) {
-//         res.status(401).json({ message: 'Authentication failed' });
-//     }
-// }
-
 exports.listAllGroups = async function (req, res) {
     try {
         const groups = await Group.find({});
@@ -134,6 +121,20 @@ exports.sendInvitation = async (req, res) => {
     }
 }
 
+
+
+/* This code verifies both the user token and the invitation token,
+checks that the user accepting the invitation is the invitee,
+and then proceeds as before. If the user token or the invitation token is invalid,
+jwt.verify will throw an error and the function will send a 500 response. 
+If the user trying to accept the invitation is not the invitee, 
+the function will send a 403 response.*/
+
+/* Ne marche pas , UserId est undefined , j'ai double checker les tokken en checkant
+si j'ai passer en parametre les bonnes variables et cela me semble bons mais je n'ai trouvée 
+de solution,probablement un probleme de syntaxe quelque part 
+ou une inatention de ma part quelque part
+mais ne marche toujours pas*/
 exports.acceptInvitation = async (req, res) => {
     const invitationToken = req.body.token;
     const userToken = req.headers['authorization'];
@@ -145,11 +146,20 @@ exports.acceptInvitation = async (req, res) => {
         // Verify the invitation token
         const inviteeId  = jwt.verify(invitationToken, process.env.JWT_KEY);
 
-        console.log(userToken);
-        console.log(invitationToken);
+        // console.log("userToken")
+        // console.log(userToken);
+
+        // console.log("invitationToken");
+        // console.log(invitationToken);
+
+        console.log("userId");
+        console.log(userId);
+
+        console.log("inviteeId");
+        console.log(inviteeId.inviteeId);
 
         // Ensure the user accepting the invitation is the invitee
-        if (userId !== inviteeId) {
+        if (userId !== inviteeId.inviteeId) {
             return res.status(403).json({ message: 'User is not authorized to accept this invitation' });
             
         }
@@ -187,8 +197,54 @@ exports.acceptInvitation = async (req, res) => {
     }
 }
 
+
+
+/*This method gets the invitationToken from the request body, 
+verifies the token, finds the group, checks if the invitation exists, 
+removes the invitation, and saves the changes. If any of these steps fail, 
+it sends a 500 response with an error message. */
 exports.declineInvitation = async (req, res) => {
-    const { groupId, token } = req.body;
+    const invitationToken = req.body.token;
+
+    try {
+        // Verify the invitation token
+        const { groupId, inviteeId } = jwt.verify(invitationToken, process.env.JWT_KEY);
+
+        // Find the group
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(404).json({ message: 'Group not found' });
+        }
+
+        // Check if the invitation exists
+        const invitationIndex = group.invitations.findIndex(invitation => invitation.token === invitationToken);
+        if (invitationIndex === -1) {
+            return res.status(404).json({ message: 'Invitation not found' });
+        }
+
+        // Remove the invitation
+        group.invitations.splice(invitationIndex, 1);
+
+        // Save the changes
+        await group.save();
+
+        res.status(200).json({ message: 'Invitation declined' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error declining invitation', error });
+    }
+}
+
+
+/* This method finds the group, 
+check if admin_id == user Id,
+checks if all invitations are accepted or declined, 
+checks if there are at least two members in the group, 
+shuffles the members, assigns a giver and a receiver to each member, 
+and saves the changes. 
+If a person is the giver for himself, he will be the receiver for another person, and vice versa, 
+so a person will not be the giver and receiver for himself.*/
+exports.assignSecretSanta = async (req, res) => {
+    const groupId = req.params.id_group;
 
     try {
         // Find the group
@@ -197,16 +253,49 @@ exports.declineInvitation = async (req, res) => {
             return res.status(404).json({ message: 'Group not found' });
         }
 
-        // Find the invitation in the group's invitations and remove it
-        const index = group.invitations.findIndex(invitation => invitation.token === token);
-        if (index !== -1) {
-            group.invitations.splice(index, 1);
-            await group.save();
+        // Check if the user is the admin of the group
+        if (group.admin_id !== req.user.userId) {
+            return res.status(403).json({ message: 'User is not the admin of the group' });
         }
+        try {
+            // Find the group
+            const group = await Group.findById(groupId);
+            if (!group) {
+                return res.status(404).json({ message: 'Group not found' });
+            }
 
-        res.status(200).json({ message: 'Invitation declined' });
+            // Check if all invitations are accepted or declined
+            if (group.invitations.length > 0) {
+                return res.status(400).json({ message: 'Not all invitations are accepted or declined' });
+            }
+
+            // Check if there are at least two members in the group
+            if (group.members.length < 2) {
+                return res.status(400).json({ message: 'Not enough members in the group' });
+            }
+
+            // Shuffle the members
+            const shuffledMembers = group.members.sort(() => Math.random() - 0.5);
+
+            // Assign a giver and a receiver to each member
+            group.SecretSanta = shuffledMembers.map((member, index) => {
+                return {
+                    giver: member,
+                    receiver: shuffledMembers[(index + 1) % shuffledMembers.length]
+                };
+            });
+        }catch (error) {
+            res.status(500).json({ message: 'Error checking admin', error });
+        }
+            // Save the changes
+            await group.save();
+
+            res.status(200).json({ message: 'Secret Santa assigned' });
     } catch (error) {
-        res.status(500).json({ message: 'Error declining invitation', error });
+        res.status(500).json({ message: 'Error assigning Secret Santa', error });
     }
 }
+
+
+
 

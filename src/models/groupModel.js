@@ -15,7 +15,12 @@ let groupSchema = new Schema({
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     invitations: { type: Array,
         default: [] 
+    },
+    SecretSanta: [{
+        giver: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     }
+    ]
 });
 
 module.exports = mongoose.model('mongoose', groupSchema);

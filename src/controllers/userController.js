@@ -15,13 +15,20 @@ exports.listAllUsers = async function (req, res) {
 
 exports.register = async (req, res) => {
     try {
-        const newUser = new User(req.body);
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        // Create a new user with the hashed password
+        const newUser = new User({
+            ...req.body,
+            password: hashedPassword
+        });
+
         const user = await newUser.save();
 
         res.status(201).json({ message: `Utilisateur crée: ${user.email}` });
     } catch (error) {
         res.status(400).json({ message: "invalid request" });
-
     }
 }
 
@@ -31,18 +38,21 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "user not found" });
         }
-        if (user.email === req.body.email && user.password === req.body.password) {
-            const userData = {
-                id: user._id,
-                email: user.email,
-                password: user.password,
-                firstName: user.firstName,
-            };
-            const token = jwt.sign({ userId: user._id, groupId: user.group_id }, process.env.JWT_KEY, { expiresIn: '1d' });
-            res.status(200).json({ token });
-        } if (user.email !== req.body.email && user.password !== req.body.password) {
-            res.status(401).json({ message: "password incorrect" });
+
+        // Compare the hashed password with the password from the request body
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (!match) {
+            return res.status(401).json({ message: "password incorrect" });
         }
+
+        const userData = {
+            id: user._id,
+            email: user.email,
+            password: user.password,
+            firstName: user.firstName,
+        };
+        const token = jwt.sign({ userId: user._id, groupId: user.group_id }, process.env.JWT_KEY, { expiresIn: '1d' });
+        res.status(200).json({ token });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "an error occured" });
