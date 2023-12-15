@@ -79,7 +79,7 @@ exports.deleteAUser = async (req, res) =>{
 exports.getAUser = async (req, res) => {
     try{
         const user = await User.findById(req.params.id_user);
-        res.status(200);
+        res.status(201);
         res.json(user);
     }
     catch (error) {

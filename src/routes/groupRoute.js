@@ -1,31 +1,47 @@
 const express = require('express');
 const router = express.Router();
 
+const jwtMiddleware = require('../middlewares/jwtMiddleware');
 const groupController = require('../controllers/groupController');
 
+router
+    .route('/')
+    .get(groupController.listAllGroups)
 
 
 // Group creation endpoint
-router.post('/group', async (req, res) => {
-    // TODO: Implement group creation
-});
+router
+    .route('/create')
+    .post(groupController.createAGroup)
 
-// Group invitation endpoint
-router.post('/group/invite', async (req, res) => {
-    // TODO: Implement group invitation
-});
+router
+    .route('/:id_group')
+    .put(groupController.updateAGroup)
+    .delete(groupController.deleteGroup)
 
-// Accept invitation endpoint
-router.post('/group/accept', async (req, res) => {
-    // TODO: Implement invitation acceptance
-});
+
+/// Group invitation endpoint
+router
+    .route('/:id_group/invite')
+    .post(groupController.sendInvitation)
+
+
+//Accept invitation endpoint
+router
+    .route('/:id_group/acceptInvite')
+    .post(groupController.acceptInvitation)
+
 
 // Decline invitation endpoint
-router.post('/group/decline', async (req, res) => {
-    // TODO: Implement invitation decline
-});
+router
+    .route('/:id_group/declineInvite')
+    .post(groupController.declineInvitation)
+    
+
 
 // Secret Santa assignment endpoint
-router.post('/group/assign', async (req, res) => {
-    // TODO: Implement Secret Santa assignment
-});
+// router
+//     .route('/:id_user/assign')
+//     .post(groupController.assignASanta)
+
+module.exports = router;

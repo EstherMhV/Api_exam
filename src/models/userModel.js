@@ -18,6 +18,11 @@ let userSchema = new Schema({
     groupId: { type: mongoose.Schema.Types.ObjectId, 
     ref: 'Group' 
     },
+    role: {
+        type: String,
+        requires: true,
+        default: 'user',
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);
