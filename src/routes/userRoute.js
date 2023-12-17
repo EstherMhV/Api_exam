@@ -22,6 +22,7 @@ router
     .put(jwtMiddleware.verifyToken,userController.updateAUser)
     .delete(jwtMiddleware.verifyToken,userController.deleteAUser)
     .get(jwtMiddleware.verifyToken,userController.listAllUsers)
+    .get(jwtMiddleware.verifyToken, userController.getAUser)
 
 module.exports = router;
 

@@ -246,8 +246,8 @@ exports.assignSecretSanta = async (req, res) => {
     const groupId = req.params.id_group;
 
     try {
-        // Find the group
-        const group = await Group.findById(groupId);
+        // Find the group and populate the members
+        const group = await Group.findById(groupId).populate('members');
         if (!group) {
             return res.status(404).json({ message: 'Group not found' });
         }
@@ -256,40 +256,39 @@ exports.assignSecretSanta = async (req, res) => {
         if (group.admin_id !== req.user.userId) {
             return res.status(403).json({ message: 'User is not the admin of the group' });
         }
-        try {
-            // Find the group
-            const group = await Group.findById(groupId);
-            if (!group) {
-                return res.status(404).json({ message: 'Group not found' });
-            }
 
-            // Check if all invitations are accepted or declined
-            if (group.invitations.length > 0) {
-                return res.status(400).json({ message: 'Not all invitations are accepted or declined' });
-            }
-
-            // Check if there are at least two members in the group
-            if (group.members.length < 2) {
-                return res.status(400).json({ message: 'Not enough members in the group' });
-            }
-
-            // Shuffle the members
-            const shuffledMembers = group.members.sort(() => Math.random() - 0.5);
-
-            // Assign a giver and a receiver to each member
-            group.SecretSanta = shuffledMembers.map((member, index) => {
-                return {
-                    giver: member,
-                    receiver: shuffledMembers[(index + 1) % shuffledMembers.length]
-                };
-            });
-        }catch (error) {
-            res.status(500).json({ message: 'Error checking admin', error });
+        // Check if all invitations are accepted or declined
+        if (group.invitations.length > 0) {
+            return res.status(400).json({ message: 'Not all invitations are accepted or declined' });
         }
-            // Save the changes
-            await group.save();
 
-            res.status(200).json({ message: 'Secret Santa assigned' });
+        // Check if there are at least two members in the group
+        if (group.members.length < 2) {
+            return res.status(400).json({ message: 'Not enough members in the group' });
+        }
+
+        // Shuffle the members
+        const shuffledMembers = group.members.sort(() => Math.random() - 0.5);
+
+        // Assign a giver and a receiver to each member
+        group.SecretSanta = shuffledMembers.map((member, index) => {
+            const receiver = shuffledMembers[(index + 1) % shuffledMembers.length];
+
+            // Check if the member is assigned to themselves
+            if (member._id.equals(receiver._id)) {
+                return res.status(400).json({ message: 'A member cannot be their own Secret Santa' });
+            }
+
+            return {
+                giver: member._id,
+                receiver: receiver._id
+            };
+        });
+
+        // Save the changes
+        await group.save();
+
+        res.status(200).json({ message: 'Secret Santa assigned' });
     } catch (error) {
         res.status(500).json({ message: 'Error assigning Secret Santa', error });
     }

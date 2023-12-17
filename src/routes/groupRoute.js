@@ -17,10 +17,13 @@ router
 router
     .route('/:id_group')
     .put(jwtMiddleware.verifyToken,groupController.updateAGroup)
+    .get(jwtMiddleware.verifyToken, groupController.getAGroup)
     .delete(jwtMiddleware.verifyToken,groupController.deleteGroup)
 
 
 /// Group invitation endpoint
+// ne pas oublié de se relogin avant d'envoyer l'invitation
+// apres avoir creer le groupe afin que le token prenne en compte l'id du group
 router
     .route('/invite')
     .post(jwtMiddleware.verifyToken,groupController.sendInvitation)

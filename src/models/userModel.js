@@ -22,7 +22,7 @@ let userSchema = new Schema({
         type: String,
         required: true,
         default: 'user',
-    }
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);
