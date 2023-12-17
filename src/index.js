@@ -1,10 +1,35 @@
 
 const express = require('express')
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const app = express()
 const port = 3000
 
 const mongoose = require("mongoose")
 mongoose.connect('mongodb://0.0.0.0:27017/apiExam');
+
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Secret Santa API',
+            version: '1.0.0',
+        },
+    servers:[
+            {
+                url :'http://localhost:3000/'
+            }
+        ]
+    },
+    apis: ['./docs/secretSantaDoc.js'], // files containing annotations as above
+}
+
+const swaggerSpec = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 
 app.use(express.urlencoded());
 app.use(express.json());

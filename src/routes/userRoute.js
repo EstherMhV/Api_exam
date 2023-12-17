@@ -15,14 +15,14 @@ router
 
 router
     .route('/')
-    .get(jwtMiddleware.verifyToken,userController.listAllUsers)
+    .get(jwtMiddleware.verifyToken,jwtMiddleware.verifyAdmin ,userController.listAllUsers)
 
 router
     .route('/:id_user')
     .put(jwtMiddleware.verifyToken,userController.updateAUser)
-    .delete(jwtMiddleware.verifyToken,userController.deleteAUser)
-    .get(jwtMiddleware.verifyToken,userController.listAllUsers)
-    .get(jwtMiddleware.verifyToken, userController.getAUser)
+    .delete(jwtMiddleware.verifyToken,jwtMiddleware.verifyAdmin ,userController.deleteAUser)
+    .get(jwtMiddleware.verifyToken,jwtMiddleware.verifyAdmin ,userController.listAllUsers)
+    .get(jwtMiddleware.verifyToken,jwtMiddleware.verifyAdmin ,userController.getAUser)
 
 module.exports = router;
 
