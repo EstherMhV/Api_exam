@@ -1,0 +1,547 @@
+{
+	"info": {
+		"_postman_id": "25cf4106-504d-44d0-bd9b-53effab04ba2",
+		"name": "apiExam",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26714011"
+	},
+	"item": [
+		{
+			"name": "registerUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "admin@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin4007",
+							"type": "text"
+						},
+						{
+							"key": "firstName",
+							"value": "esther",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/register?email&password&firstName",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"register"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": null
+						},
+						{
+							"key": "password",
+							"value": null
+						},
+						{
+							"key": "firstName",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "admin@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin4007",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/login?email=admin@gmail.com&password=admin4007",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "admin@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "admin4007"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "listAllUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/users/:id_user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						":id_user"
+					],
+					"variable": [
+						{
+							"key": "id_user",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUser",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "admin4007@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/657b18abfe652682692455a0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"657b18abfe652682692455a0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/users/657b18abfe652682692455a0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"657b18abfe652682692455a0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAgroup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTdjMzJlMzI2MTI0MTM3MmUzMzk0NWUiLCJpYXQiOjE3MDI2MzkzNzUsImV4cCI6MTcwMjY3NTM3NX0.QgbYPk5V7MnO8vNXPwFTnn5B9nRnQm9cldaUcGw5C0I",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "totoTeam",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/groups/657c38f7242d3d1fae02dc06/invite",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						"657c38f7242d3d1fae02dc06",
+						"invite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ListAllGroups",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTdjMzJlMzI2MTI0MTM3MmUzMzk0NWUiLCJpYXQiOjE3MDI2NDA4NTMsImV4cCI6MTcwMjY3Njg1M30.H15VUMB1SJAzDZfR8--OaixAOal4a9o1fkRp1iTH9-Y",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "email@gmail.com",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/groups/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SendInvitation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTdjMzJlMzI2MTI0MTM3MmUzMzk0NWUiLCJncm91cElkIjoiNjU3YzM4ZjcyNDJkM2QxZmFlMDJkYzA2IiwiaWF0IjoxNzAyNjQ2Mjg5LCJleHAiOjE3MDI3MzI2ODl9.YgdMqfnJOTjFuOZSQdF3ePuliQ17MiFJHruIaUZrnTc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "email@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/groups/invite?email",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						"invite"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "declineInvitation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdmMDU5MDhhMjEwM2YzNDdkZjk2ZmEiLCJpYXQiOjE3MDI4Mjc3MzIsImV4cCI6MTcwMjkxNDEzMn0.edzmcSv6RzpwVYyqsvzT1kEqi9gijK_xuNmCLt4h77I",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZW5kZXJHcm91cElkIjoiNjU3ZjE2ODFlYjFmOWEzZjBiYmE5YzdhIiwiaW52aXRlZUlkIjoiNjU3ZjA1OTA4YTIxMDNmMzQ3ZGY5NmZhIiwiaWF0IjoxNzAyODI3Njk1LCJleHAiOjE3MDI5MTQwOTV9.S_D8vKF-OVnjFqXm88ywMlXfrkDp_RvsXVE5UcYwKGI",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/groups/657f1681eb1f9a3f0bba9c7a/declineInvite",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						"657f1681eb1f9a3f0bba9c7a",
+						"declineInvite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accepttInvite",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdmMDU5MDhhMjEwM2YzNDdkZjk2ZmEiLCJpYXQiOjE3MDI4Mjg5MjUsImV4cCI6MTcwMjkxNTMyNX0.hVEuLS5dnoZRq4JsbUmhmwhUyRvUVlFq8hgB8YlnMRA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZW5kZXJHcm91cElkIjoiNjU3ZjE2ODFlYjFmOWEzZjBiYmE5YzdhIiwiaW52aXRlZUlkIjoiNjU3ZjA1OTA4YTIxMDNmMzQ3ZGY5NmZhIiwiaWF0IjoxNzAyODI4ODYxLCJleHAiOjE3MDI5MTUyNjF9.VyCjSG-SRy3FY71y-BY05wGbZWGX41aZYCUUHg-VN4I",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/groups/657f1681eb1f9a3f0bba9c7a/acceptInvite",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						"657f1681eb1f9a3f0bba9c7a",
+						"acceptInvite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdmMDU4MDhhMjEwM2YzNDdkZjk2ZjciLCJncm91cElkIjoiNjU3ZjE2ODFlYjFmOWEzZjBiYmE5YzdhIiwiaWF0IjoxNzAyODI5MTY1LCJleHAiOjE3MDI5MTU1NjV9.nGMOINkohArrEuFF7c0jyZ_7nW6ls6pJN_lrpO6mXzQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:3000/groups/657f1681eb1f9a3f0bba9c7a/assign",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						"657f1681eb1f9a3f0bba9c7a",
+						"assign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assignment",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTdmMDU4MDhhMjEwM2YzNDdkZjk2ZjciLCJncm91cElkIjoiNjU3ZjE2ODFlYjFmOWEzZjBiYmE5YzdhIiwiaWF0IjoxNzAyODUwNDM2LCJleHAiOjE3MDI5MzY4MzZ9.Ae5T4OMB0kwNWO7VBB_1xqBz2i-fNMld06U1DrSTxjc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/657f05808a2103f347df96f7/assignment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"657f05808a2103f347df96f7",
+						"assignment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateGroup",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/groups/:id_group",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						":id_group"
+					],
+					"variable": [
+						{
+							"key": "id_group",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAgroup",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/groups/:id_group",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						":id_group"
+					],
+					"variable": [
+						{
+							"key": "id_group",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteGroup",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/groups/:id_group",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"groups",
+						":id_group"
+					],
+					"variable": [
+						{
+							"key": "id_group",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
