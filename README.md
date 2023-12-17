@@ -6,6 +6,9 @@ This is a RESTful API for a "Secret Santa" application, built with Node.js. It p
 
 ## Features
 
+Postman collection avaliable in a JSON format in "./src/docs/postmanCollection"
+
+
 ### User Registration and Authentication
 - User account creation with authentication.
 - Managing password security.
