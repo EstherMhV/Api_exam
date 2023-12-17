@@ -18,17 +18,22 @@ exports.register = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        // Create a new user with the hashed password
+        // Check if any user already exists
+        const existingUser = await User.findOne();
+        const role = existingUser ? 'user' : 'admin';
+
+        // Create a new user with the hashed password and role
         const newUser = new User({
             ...req.body,
-            password: hashedPassword
+            password: hashedPassword,
+            role
         });
 
         const user = await newUser.save();
 
-        res.status(201).json({ message: `Utilisateur crée: ${user.email}` });
+        res.status(201).json({ message: `Utilisateur crée: ${user.email}`, role: user.role });
     } catch (error) {
-        res.status(400).json({ message: "invalid request" });
+        res.status(400).json({ message: "invalid request", error });
     }
 }
 

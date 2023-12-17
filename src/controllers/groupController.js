@@ -34,7 +34,8 @@ exports.createAGroup = async (req, res) => {
     try {
         // Verify the token and extract the user's ID
         const decoded = jwt.verify(token, secretKey);
-        const userId = decoded._id;
+        const userId = decoded.userId;
+
 
         // Create a new group
         const group = new Group({ name, admin_id: userId });
@@ -48,7 +49,6 @@ exports.createAGroup = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         user.group_id = group._id;
-        user.role = 'admin';
         await user.save();
 
         // Add the user to the group's members
@@ -144,13 +144,8 @@ exports.acceptInvitation = async (req, res) => {
         const { userId } = jwt.verify(userToken, process.env.JWT_KEY);
 
         // Verify the invitation token
-        const inviteeId  = jwt.verify(invitationToken, process.env.JWT_KEY);
+        const { inviteeId ,senderGroupId} = jwt.verify(invitationToken, process.env.JWT_KEY);
 
-        // console.log("userToken")
-        // console.log(userToken);
-
-        // console.log("invitationToken");
-        // console.log(invitationToken);
 
         console.log("userId");
         console.log(userId);
@@ -158,8 +153,12 @@ exports.acceptInvitation = async (req, res) => {
         console.log("inviteeId");
         console.log(inviteeId.inviteeId);
 
+        console.log("groupId");
+        console.log(senderGroupId);
+
+
         // Ensure the user accepting the invitation is the invitee
-        if (userId !== inviteeId.inviteeId) {
+        if (userId !== inviteeId) {
             return res.status(403).json({ message: 'User is not authorized to accept this invitation' });
             
         }
@@ -171,7 +170,7 @@ exports.acceptInvitation = async (req, res) => {
         }
 
         // Find the group
-        const group = await Group.findById(groupId);
+        const group = await Group.findById(senderGroupId);
         if (!group) {
             return res.status(404).json({ message: 'Group not found' });
         }
@@ -184,7 +183,7 @@ exports.acceptInvitation = async (req, res) => {
 
         // Add the user to the group's members
         group.members.push(inviteeId);
-        invitee.group_id = groupId;
+        invitee.group_id = senderGroupId;
         group.invitations.splice(invitationIndex, 1); // Remove the invitation
 
         // Save the changes
@@ -208,10 +207,10 @@ exports.declineInvitation = async (req, res) => {
 
     try {
         // Verify the invitation token
-        const { groupId, inviteeId } = jwt.verify(invitationToken, process.env.JWT_KEY);
+        const { senderGroupId, inviteeId } = jwt.verify(invitationToken, process.env.JWT_KEY);
 
         // Find the group
-        const group = await Group.findById(groupId);
+        const group = await Group.findById(senderGroupId);
         if (!group) {
             return res.status(404).json({ message: 'Group not found' });
         }
