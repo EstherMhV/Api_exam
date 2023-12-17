@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const Group = require('../models/groupModel');
 require('dotenv').config()
 
 exports.listAllUsers = async function (req, res) {
@@ -100,3 +101,38 @@ exports.getAUser = async (req, res) => {
         res.json({message:"Erreur serveur"});
     }
 }
+
+
+// Define an asynchronous function named 'getAssignment'
+exports.getAssignment = async (req, res) => {
+    try {
+        // Extract the user ID from the request parameters
+        const userId = req.params.id_user;
+        
+        // Find the user with the given ID in the database
+        const user = await User.findById(userId);
+    
+        // If no user is found, return a 404 status code and a message
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        // Find a group where the user is a giver in the SecretSanta array
+        // Populate the 'receiver' field in the SecretSanta array with the actual user documents
+        const group = await Group.findOne({ 'SecretSanta.giver': userId }).populate('SecretSanta.receiver');
+        
+        // If no group is found, return a 404 status code and a message
+        if (!group) {
+            return res.status(404).json({ message: 'No Secret Santa assignment found for this user' });
+        }
+
+        // Find the assignment in the SecretSanta array where the user is the giver
+        const assignment = group.SecretSanta.find(assignment => assignment.giver.toString() === userId);
+        
+        // Return the first name of the receiver in the found assignment
+        res.json({ "Your are the Secret Santa of ": assignment.receiver.firstName });
+    } catch (err) {
+        // If an error occurs, return a 500 status code and the error message
+        res.status(500).json({ message: err.message });
+    }
+};
